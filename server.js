@@ -87,7 +87,7 @@ myDB(async (client) => {
       io.emit("user", {
         username: socket.request.user.username,
         currentUsers,
-        connected: true,
+        connected: false,
       });
       // io.emit("disconnect", currentUsers);
     });
