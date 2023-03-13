@@ -66,12 +66,12 @@ myDB(async (client) => {
         } else if (user) {
           res.redirect("/");
         } else {
-          // const hash = bcrypt.hashSync(req.body.password, 12);
+          const hash = bcrypt.hashSync(req.body.password, 12);
           myDatabase.insertOne(
             {
               username: req.body.username,
-              password: req.body.password,
-              // password: hash,
+              // password: req.body.password,
+              password: hash,
             },
             (err, doc) => {
               if (err) {
@@ -112,9 +112,9 @@ myDB(async (client) => {
         if (err) return done(err);
         if (!user) return done(null, false);
         if (!password == user.password) return done(null, false);
-        // if (!bcrypt.compareSync(password, user.password)) {
-        //   return done(null, false);
-        // }
+        if (!bcrypt.compareSync(password, user.password)) {
+          return done(null, false);
+        }
         return done(null, user);
       });
     })
