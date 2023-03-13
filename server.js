@@ -41,6 +41,11 @@ myDB(async (client) => {
     console.log("A user has connected");
     ++currentUsers;
     io.emit("user count", currentUsers);
+    socket.on("disconnecting", () => {
+      --currentUsers;
+      console.log("A user has disconnected");
+      io.emit("disconnect", currentUsers);
+    });
   });
 
   auth(app, myDatabase);
