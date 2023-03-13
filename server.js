@@ -28,6 +28,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/");
+}
+
 myDB(async (client) => {
   const myDatabase = await client.db("database").collection("users");
   console.log("Successful connection");
@@ -70,7 +77,7 @@ myDB(async (client) => {
     })
   );
 
-  app.route("/profile").get((req, res) => {
+  app.route("/profile").get(ensureAuthenticated, (req, res) => {
     res.render("profile");
   });
 }).catch((e) => {
