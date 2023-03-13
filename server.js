@@ -42,7 +42,7 @@ passport.use(
 
 myDB(async (client) => {
   const myDatabase = await client.db("database").collection("users");
-
+  console.log("Successful connection");
   app.route("/").get((req, res) => {
     res.render("index", {
       title: "Connected to Database",
@@ -60,17 +60,18 @@ myDB(async (client) => {
     });
   });
 }).catch((e) => {
+  console.log("Connection Unsuccessful");
   app.route("/").get((req, res) => {
     res.render("index", { title: e, message: "Unable to connect to database" });
   });
 });
 
-app.route("/").get((req, res) => {
-  res.render("index", {
-    title: "Hello",
-    message: "Please log in",
-  });
-});
+// app.route("/").get((req, res) => {
+//   res.render("index", {
+//     title: "Hello",
+//     message: "Please log in",
+//   });
+// });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
