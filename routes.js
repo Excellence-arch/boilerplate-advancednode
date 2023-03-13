@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-module.exports = function (app, myDataBase) {
+module.exports = function (app, myDatabase) {
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
