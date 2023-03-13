@@ -28,18 +28,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    myDataBase.findOne({ username: username }, (err, user) => {
-      console.log(`User ${username} attempted to log in.`);
-      if (err) return done(err);
-      if (!user) return done(null, false);
-      if (password !== user.password) return done(null, false);
-      return done(null, user);
-    });
-  })
-);
-
 myDB(async (client) => {
   const myDatabase = await client.db("database").collection("users");
   console.log("Successful connection");
@@ -47,6 +35,7 @@ myDB(async (client) => {
     res.render("index", {
       title: "Connected to Database",
       message: "Please login",
+      showLogin: true,
     });
   });
 
@@ -58,6 +47,31 @@ myDB(async (client) => {
     myDatabase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
       done(null, doc);
     });
+  });
+
+  app
+    .route("/login")
+    .post(
+      passport.authenticate("local", { failureRedirect: "/" }),
+      (req, res) => {
+        res.render("/profile");
+      }
+    );
+
+  passport.use(
+    new LocalStrategy((username, password, done) => {
+      myDatabase.findOne({ username: username }, (err, user) => {
+        console.log(`User ${username} attempted to log in.`);
+        if (err) return done(err);
+        if (!user) return done(null, false);
+        if (password !== user.password) return done(null, false);
+        return done(null, user);
+      });
+    })
+  );
+
+  app.route("/profile").get((req, res) => {
+    res.render("profile");
   });
 }).catch((e) => {
   console.log("Connection Unsuccessful");
