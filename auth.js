@@ -40,7 +40,7 @@ module.exports = function (app, myDatabase) {
         callbackURL: "https://advancednode.onrender.com/auth/github/callback",
       },
       function (accessToken, refreshToken, profile, cb) {
-        myDataBase.findOneAndUpdate(
+        myDatabase.findOneAndUpdate(
           { id: profile.id },
           {
             $setOnInsert: {

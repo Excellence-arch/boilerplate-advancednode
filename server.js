@@ -36,8 +36,11 @@ myDB(async (client) => {
   const myDatabase = await client.db("database").collection("users");
   console.log("Successful connection");
 
+  let currentUsers = 0;
   io.on("connection", (socket) => {
     console.log("A user has connected");
+    ++currentUsers;
+    io.emit("user count", currentUsers);
   });
 
   auth(app, myDatabase);
